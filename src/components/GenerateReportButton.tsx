@@ -11,6 +11,10 @@ export default function GenerateReportButton({ documentId }: { documentId: strin
     setSuccess(false);
     setError(null);
 
+    console.log("Generating report for documentId:", documentId);
+
+
+
     try {
       await generateReport({ documentId });
       setSuccess(true);

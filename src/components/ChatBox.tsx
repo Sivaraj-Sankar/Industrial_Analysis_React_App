@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { sendChatMessage } from "../client/api";
+import React, { useEffect, useState } from "react";
+import { sendChatMessage, getChatHistory } from "../client/api";
 
 export default function ChatBox({ documentId }: { documentId?: string }) {
   const [input, setInput] = useState("");
@@ -8,6 +8,23 @@ export default function ChatBox({ documentId }: { documentId?: string }) {
   >([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [historyLoading, setHistoryLoading] = useState(true);
+
+
+  useEffect(() => {
+    async function fetchHistory() {
+      try {
+        const history = await getChatHistory({ documentId });
+        setMessages(history);
+      } catch (err: any) {
+        console.error("Failed to load chat history", err);
+      } finally {
+        setHistoryLoading(false);
+      }
+    }
+
+    fetchHistory();
+  }, [documentId]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -50,9 +67,13 @@ export default function ChatBox({ documentId }: { documentId?: string }) {
           maxHeight: "300px",
         }}
       >
-        {messages.length === 0 && <p>No messages yet.</p>}
+       {historyLoading ? (
+          <p>Loading chat history...</p>
+        ) : messages.length === 0 ? (
+          <p>No messages yet.</p>
+        ) : (
 
-        {messages.map((msg, index) => (
+        messages.map((msg, index) => (
           <div
             key={index}
             style={{
@@ -62,7 +83,7 @@ export default function ChatBox({ documentId }: { documentId?: string }) {
           >
             <strong>{msg.role === "user" ? "You" : "AI"}:</strong> {msg.content}
           </div>
-        ))}
+        )))}
       </div>
 
       <textarea

@@ -1,3 +1,5 @@
+// const BASE_URL = "http://localhost:8000";
+
 export async function uploadDocument(params: {
     fileName: string;
     fileBase64: string;
@@ -52,7 +54,7 @@ export async function uploadDocument(params: {
     });
   
     if (!response.ok) {
-      throw new Error("Failed to fetch report status");
+      throw new Error("Failed to fetch report status"); 
     }
   
     return response.json();
