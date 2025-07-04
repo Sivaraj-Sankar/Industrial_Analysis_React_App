@@ -17,7 +17,7 @@ type Document = {
   }[];
 };
 
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "http://localhost:8005";
 
 export default function UserDocuments() {
   const [documents, setDocuments] = useState<Document[]>([]);
